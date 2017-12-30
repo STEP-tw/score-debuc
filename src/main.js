@@ -1,20 +1,17 @@
 const ROWS = 60;
 const COLS = 120;
 
-let game = new Game(ROWS,COLS);
+let game=undefined;
 
 let animator=undefined;
 
 const animateSnake=function() {
-  let snake = game.getSnake();
-  let oldHead=snake.getHead();
-  let oldTail=snake.move();
-  let head=snake.getHead();
-  paintBody(oldHead);
-  unpaintSnake(oldTail);
-  paintHead(head);
-  if(head.isSameCoordAs(game.getFood())) {
-    snake.grow();
+  let details=game.move();
+  paintBody(details.oldHead);
+  unpaintSnake(details.oldTail);
+  paintHead(details.head);
+  if(game.hasSnakeEatenFood()) {
+    game.grow();
     game.increaseScore();
     updateScore(game.getScore());
     game.createFood();
@@ -26,13 +23,13 @@ const changeSnakeDirection=function(event) {
   let snake = game.getSnake();
   switch (event.code) {
     case "KeyA":
-      snake.turnLeft();
+      game.turnLeft();
       break;
     case "KeyD":
-      snake.turnRight();
+      game.turnRight();
       break;
     case "KeyC":
-      snake.grow();
+      game.grow();
       break;
     default:
   }
@@ -44,8 +41,15 @@ const addKeyListener=function() {
   grid.focus();
 }
 
+const createGame=function() {
+  let topLeft=new Position(0,0,"east");
+  let bottomRight=new Position(COLS,ROWS,"east");
+  game = new Game(topLeft,bottomRight);
+}
+
 const startGame=function() {
-  game.createSnake();
+  createGame();
+  game.addSnake();
   drawGrids(ROWS,COLS);
   drawSnake(game.getSnake());
   game.createFood();
