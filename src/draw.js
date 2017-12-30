@@ -39,3 +39,9 @@ const drawSnake=function(snake) {
 const drawFood=function(food) {
   paintCell(food,"food");
 }
+
+const updateScore=function(score){
+  let div = document.getElementById('hidden_tail');
+  let gameScore = `<h3>Score: ${score}</h3>`;
+  div.innerHTML = gameScore;
+}
